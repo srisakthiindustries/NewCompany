@@ -10,16 +10,28 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const { Pool } = pg;
 
-const pgConfig = {
-  user: process.env.PGUSER || 'postgres',
-  password: process.env.PGPASSWORD || 'Beon@994182',
-  host: process.env.PGHOST || '127.0.0.1',
-  port: parseInt(process.env.PGPORT || '5433', 10),
-  database: process.env.PGDATABASE || 'srisakthi_db',
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
-};
+const isRemoteHost = (process.env.PGHOST && !['127.0.0.1', 'localhost'].includes(process.env.PGHOST)) || process.env.DATABASE_URL;
+const useSSL = process.env.PGSSL === 'true' || (isRemoteHost && process.env.PGSSL !== 'false');
+
+const pgConfig = process.env.DATABASE_URL
+  ? {
+      connectionString: process.env.DATABASE_URL,
+      ssl: useSSL ? { rejectUnauthorized: false } : false,
+      max: 20,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+    }
+  : {
+      user: process.env.PGUSER || 'postgres',
+      password: process.env.PGPASSWORD || 'Beon@994182',
+      host: process.env.PGHOST || '127.0.0.1',
+      port: parseInt(process.env.PGPORT || '5433', 10),
+      database: process.env.PGDATABASE || 'srisakthi_db',
+      ssl: useSSL ? { rejectUnauthorized: false } : false,
+      max: 20,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+    };
 
 export const pool = new Pool(pgConfig);
 

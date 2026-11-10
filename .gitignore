@@ -7,6 +7,8 @@ db_data/
 **/db_data/
 *.pid
 postmaster.pid
+*.dump
+*dump.sql
 
 # Environment variables & secrets (Passwords, JWT secrets)
 .env
@@ -37,3 +39,4 @@ build/
 .idea/
 .DS_Store
 Thumbs.db
+

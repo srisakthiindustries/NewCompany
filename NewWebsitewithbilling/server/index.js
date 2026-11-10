@@ -88,25 +88,29 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Startup & Auto Database Initialization
-async function startServer() {
-  try {
-    console.log('[System] Verifying and seeding PostgreSQL database...');
-    await seedInitialData();
+export default app;
 
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`=======================================================`);
-      console.log(`  Sri Sakthi Industries Platform Engine Started!`);
-      console.log(`  Backend API:  http://localhost:${PORT}`);
-      console.log(`  PostgreSQL:   Port ${process.env.PGPORT || 5433} (DB: ${process.env.PGDATABASE || 'srisakthi_db'})`);
-      console.log(`  pgAdmin User: ${process.env.PGUSER || 'postgres'}`);
-      console.log(`=======================================================`);
-    });
-  } catch (err) {
-    console.error('Fatal initialization error:', err);
-    process.exit(1);
+// Startup & Auto Database Initialization (Runs standalone in Node, but skipped in serverless Vercel)
+if (process.env.VERCEL !== '1') {
+  async function startServer() {
+    try {
+      console.log('[System] Verifying and seeding PostgreSQL database...');
+      await seedInitialData();
+
+      app.listen(PORT, '0.0.0.0', () => {
+        console.log(`=======================================================`);
+        console.log(`  Sri Sakthi Industries Platform Engine Started!`);
+        console.log(`  Backend API:  http://localhost:${PORT}`);
+        console.log(`  PostgreSQL:   Port ${process.env.PGPORT || 5433} (DB: ${process.env.PGDATABASE || 'srisakthi_db'})`);
+        console.log(`  pgAdmin User: ${process.env.PGUSER || 'postgres'}`);
+        console.log(`=======================================================`);
+      });
+    } catch (err) {
+      console.error('Fatal initialization error:', err);
+      process.exit(1);
+    }
   }
-}
 
-startServer();
+  startServer();
+}
 

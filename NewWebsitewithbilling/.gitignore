@@ -5,6 +5,8 @@ node_modules/
 db_data/
 *.pid
 postmaster.pid
+*.dump
+*dump.sql
 
 # Environment variables & secrets
 .env
@@ -30,3 +32,4 @@ build/
 .idea/
 .DS_Store
 Thumbs.db
+
